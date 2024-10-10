@@ -1,5 +1,6 @@
 package com.example.getnetwork;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -17,6 +18,8 @@ import com.example.getnetwork.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,5 +28,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Context context = (Context) this;
+        Button btnStart = findViewById(R.id.btnStart);
+        TextView txtTypeNetwork = findViewById(R.id.txtTypeNetwork);
+        TextView txtUpLoad = findViewById(R.id.txtUpLoad);
+        TextView txtDownLoad = findViewById(R.id.txtDownLoad);
+        NetworkUtil networkUtil = new NetworkUtil();
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtTypeNetwork.setText(networkUtil.getNetworkStatus(context));
+            }
+        });
     }
 }
