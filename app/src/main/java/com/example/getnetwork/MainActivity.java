@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ExecutorService executor = Executors.newSingleThreadExecutor();
                 if(btnStart.getText().equals("Start")){
                     String networkStatus = networkUtil.getNetworkStatus(context);
                     txtTypeNetwork.setText("Type: " + networkStatus);
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                     if (networkStatus.equals("4G/5G")) {
                         btnStart.setText("Stop");
                         // Sử dụng ExecutorService để thực hiện tác vụ bất đồng bộ
-                        ExecutorService executor = Executors.newSingleThreadExecutor();
                         while (isRunning.get()){
                             Callable<List<Long>> dataUsageTask = new Callable<List<Long>>() {
                                 @Override
@@ -87,16 +87,18 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
 
-                            executor.shutdown();
                         }
                     } else {
+                        btnStart.setText("Start");
                         txtUpLoad.setText("Not using 4G/5G network");
                         txtDownLoad.setText("Not using 4G/5G network");
+                        executor.shutdown();
                     }
                 }
                 else {
                     btnStart.setText("Start");
                     isRunning.set(false);
+                    executor.shutdown();
                 }
             }
         });
