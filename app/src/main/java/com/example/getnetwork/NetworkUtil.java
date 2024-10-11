@@ -20,8 +20,14 @@ public class NetworkUtil {
                 if (networkCapabilities != null) {
                     if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
                         return "WiFi";
-                    } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-                        return "4G/5G";
+                    } else if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+                            // Kiểm tra khả năng hỗ trợ LTE
+                        if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) &&
+                                (networkCapabilities.getLinkDownstreamBandwidthKbps() > 0) &&
+                                (networkCapabilities.getLinkUpstreamBandwidthKbps() > 0)) {
+                            // Chúng ta có thể coi đây là LTE
+                            return "LTE";
+                        }
                     }
                 }
             }
@@ -29,11 +35,17 @@ public class NetworkUtil {
         return "No connection";
     }
 
-    public static long getMobileUpload() {
-        return TrafficStats.getMobileTxBytes();
+    public static long getMobileUpload(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+        return networkCapabilities.getLinkUpstreamBandwidthKbps();
     }
 
-    public static long getMobileDownload() {
-        return TrafficStats.getMobileRxBytes();
+    public static long getMobileDownload(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network activeNetwork = connectivityManager.getActiveNetwork();
+        NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork);
+        return networkCapabilities.getLinkDownstreamBandwidthKbps();
     }
 }
