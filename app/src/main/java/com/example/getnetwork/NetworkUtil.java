@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.TrafficStats;
 import android.os.Build;
 
 public class NetworkUtil {
@@ -26,5 +27,13 @@ public class NetworkUtil {
             }
         }
         return "No connection";
+    }
+
+    public static long getMobileUpload() {
+        return TrafficStats.getMobileTxBytes();
+    }
+
+    public static long getMobileDownload() {
+        return TrafficStats.getMobileRxBytes();
     }
 }
