@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                     String networkStatus = networkUtil.getNetworkStatus(context);
                     txtTypeNetwork.setText("Type: " + networkStatus);
 
-                    if (networkStatus.equals("LTE")) {
+                    if (!networkStatus.equals("Null") && !networkStatus.equals("No connection")) {
                         btnStart.setText("Stop");
                         isRunning.set(true);
 
